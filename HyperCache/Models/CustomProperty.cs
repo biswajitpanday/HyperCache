@@ -11,4 +11,5 @@ public class CustomProperty
     public required string CreatedBy { get; set; }
     public required string ModifiedBy { get; set; }
     public required string ParentTable { get; set; }
+    public byte[] RowVersion { get; set; } = [];
 }

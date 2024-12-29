@@ -1,3 +1,4 @@
+using Delta;
 using HyperCache.Api.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,6 +15,12 @@ builder.Services.AddCors();
 
 
 var app = builder.Build();
+
+// Use this for global Delta processing
+app.UseDelta<AppDbContext>();
+
+// Use this, If needs something like: "Request contains CustomProperty"
+// app.UseDelta<AppDbContext>(shouldExecute: ctx => ctx.Request.Path.ToString().Contains("CustomProperties"));
 
 using (var scope = app.Services.CreateScope())
 {
