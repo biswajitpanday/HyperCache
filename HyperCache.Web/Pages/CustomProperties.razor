@@ -1,17 +1,15 @@
 ﻿@page "/custom-properties"
-@inject HttpClient Http
-@using HyperCache.Shared.Dtos
 
 <h3 class="mt-4 text-primary">Custom Properties</h3>
 
-@if (properties == null)
+@if (pagedResponse == null)
 {
     <div class="text-center mt-4">
         <div class="spinner-border text-primary" role="status"></div>
         <p>Loading...</p>
     </div>
 }
-else if (!properties.Any())
+else if (!pagedResponse.Items.Any())
 {
     <div class="alert alert-info mt-4" role="alert">
         No properties found.
@@ -28,7 +26,7 @@ else
         </tr>
         </thead>
         <tbody>
-        @foreach (var property in properties)
+        @foreach (var property in pagedResponse.Items)
         {
             <tr>
                 <td>@property.Name</td>
@@ -40,13 +38,74 @@ else
         }
         </tbody>
     </table>
+
+    <nav class="mt-4">
+        <ul class="pagination">
+            <li class="page-item @(pagedResponse.HasPreviousPage ? "" : "disabled")">
+                <button class="page-link" @onclick="PreviousPage">Previous</button>
+            </li>
+            @foreach (var pageNumber in GetPageNumbers())
+            {
+                <li class="page-item @(currentPage == pageNumber ? "active" : "")">
+                    <button class="page-link" @onclick="() => ChangePage(pageNumber)">@pageNumber</button>
+                </li>
+            }
+            <li class="page-item @(pagedResponse.HasNextPage ? "" : "disabled")">
+                <button class="page-link" @onclick="NextPage">Next</button>
+            </li>
+        </ul>
+    </nav>
 }
 
 @code {
-    private List<CustomPropertyDto>? properties;
+    private PagedResponseDto<CustomPropertyDto>? pagedResponse;
+    private int currentPage = 1;
+    private int pageSize = 20;
 
     protected override async Task OnInitializedAsync()
     {
-        properties = await Http.GetFromJsonAsync<List<CustomPropertyDto>>("CustomProperties/paged?page=1&pageSize=20");
+        await LoadProperties();
+    }
+
+    private async Task LoadProperties()
+    {
+        pagedResponse = await Http.GetFromJsonAsync<PagedResponseDto<CustomPropertyDto>>(
+            $"{ApiConstant.CustomPropertiesPaged}?page={currentPage}&pageSize={pageSize}");
+    }
+
+    private async Task ChangePage(int page)
+    {
+        currentPage = page;
+        await LoadProperties();
+    }
+
+    private async Task PreviousPage()
+    {
+        if (pagedResponse?.HasPreviousPage == true)
+        {
+            currentPage--;
+            await LoadProperties();
+        }
+    }
+
+    private async Task NextPage()
+    {
+        if (pagedResponse?.HasNextPage == true)
+        {
+            currentPage++;
+            await LoadProperties();
+        }
+    }
+
+    private IEnumerable<int> GetPageNumbers()
+    {
+        const int maxVisiblePages = 5;
+        int startPage = Math.Max(1, currentPage - maxVisiblePages / 2);
+        int endPage = Math.Min(startPage + maxVisiblePages - 1, pagedResponse?.TotalPages ?? 1);
+
+        for (int i = startPage; i <= endPage; i++)
+        {
+            yield return i;
+        }
     }
 }
