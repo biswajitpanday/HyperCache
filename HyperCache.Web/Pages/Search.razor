@@ -1,6 +1,4 @@
 ﻿@page "/search"
-@using HyperCache.Shared.Dtos
-@inject HttpClient Http
 
 <div class="container mt-4">
     <h3 class="text-primary">Search Custom Properties</h3>
@@ -44,7 +42,7 @@
     {
         if (!string.IsNullOrWhiteSpace(searchKeyword))
         {
-            properties = await Http.GetFromJsonAsync<List<CustomPropertyDto>>($"CustomProperties/search?keyword={searchKeyword}");
+            properties = await Http.GetFromJsonAsync<List<CustomPropertyDto>>($"{ApiConstant.CustomPropertiesSearch}?keyword={searchKeyword}");
         }
     }
 }
