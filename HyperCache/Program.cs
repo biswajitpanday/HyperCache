@@ -10,6 +10,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<DataSeeder>();
 
 builder.Services.AddControllers();
+builder.Services.AddCors();
 
 
 var app = builder.Build();
@@ -21,6 +22,7 @@ using (var scope = app.Services.CreateScope())
     await seeder.SeedCustomPropertiesAsync();
 }
 
+app.UseCors(x => x.AllowAnyOrigin());
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
