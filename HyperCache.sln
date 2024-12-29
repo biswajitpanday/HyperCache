@@ -5,8 +5,6 @@ VisualStudioVersion = 17.13.35617.110
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HyperCache.Api", "HyperCache\HyperCache.Api.csproj", "{25E73FD1-AA64-49EF-8076-BBF122492549}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HyperCache.Shared", "HyperCache.Shared\HyperCache.Shared.csproj", "{8FD7F148-AE33-4044-95EA-DF547369678A}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HyperCache.Web", "HyperCache.Web\HyperCache.Web.csproj", "{26CC1505-16F6-4B6B-ADE4-5CAE532CBAEE}"
 EndProject
 Global
@@ -19,10 +17,6 @@ Global
 		{25E73FD1-AA64-49EF-8076-BBF122492549}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{25E73FD1-AA64-49EF-8076-BBF122492549}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{25E73FD1-AA64-49EF-8076-BBF122492549}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8FD7F148-AE33-4044-95EA-DF547369678A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8FD7F148-AE33-4044-95EA-DF547369678A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8FD7F148-AE33-4044-95EA-DF547369678A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8FD7F148-AE33-4044-95EA-DF547369678A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{26CC1505-16F6-4B6B-ADE4-5CAE532CBAEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{26CC1505-16F6-4B6B-ADE4-5CAE532CBAEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{26CC1505-16F6-4B6B-ADE4-5CAE532CBAEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
