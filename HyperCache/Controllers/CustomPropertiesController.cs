@@ -8,11 +8,23 @@ namespace HyperCache.Api.Controllers;
 [Route("api/[controller]")]
 public class CustomPropertiesController(AppDbContext context) : ControllerBase
 {
-    [HttpGet("{id}")]
-    public async Task<IActionResult> Get(string id)
+
+    [HttpGet]
+    public async Task<IActionResult> GetPagedProperties([FromQuery] int page = 1, [FromQuery] int pageSize = 20)
     {
-        var customProperty = await context.CustomProperties
-                .FirstOrDefaultAsync(x => x.Id.ToString() == id);
+        var properties = await context.CustomProperties
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+        return Ok(properties);
+    }
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetPropertyDetails(string id)
+    {
+        var customProperty = await context.CustomProperties.FindAsync(id);
+        if (customProperty == null) 
+            return NotFound();
         return Ok(customProperty);
     }
 
@@ -25,7 +37,7 @@ public class CustomPropertiesController(AppDbContext context) : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> Search(string keyword)
+    public async Task<IActionResult> Search([FromQuery] string keyword)
     {
         if (string.IsNullOrEmpty(keyword))
             return BadRequest("Keyword can't be empty!");
