@@ -5,13 +5,13 @@ namespace HyperCache.Api.Data;
 
 public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {
-    public DbSet<CustomProperties> CustomProperties { get; set; }
+    public DbSet<CustomProperty> CustomProperties { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<CustomProperties>().HasData(
-            new CustomProperties { Id = 1 },
-            new CustomProperties { Id = 2 }
+        modelBuilder.Entity<CustomProperty>().HasData(
+            new CustomProperty { Id = Guid.CreateVersion7() },
+            new CustomProperty { Id = Guid.CreateVersion7() }
             );
     }
 }
