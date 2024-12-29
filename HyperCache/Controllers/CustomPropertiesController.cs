@@ -9,7 +9,7 @@ namespace HyperCache.Api.Controllers;
 public class CustomPropertiesController(AppDbContext context) : ControllerBase
 {
 
-    [HttpGet]
+    [HttpGet("paged")]
     public async Task<IActionResult> GetPagedProperties([FromQuery] int page = 1, [FromQuery] int pageSize = 20)
     {
         var properties = await context.CustomProperties
@@ -22,7 +22,7 @@ public class CustomPropertiesController(AppDbContext context) : ControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> GetPropertyDetails(string id)
     {
-        var customProperty = await context.CustomProperties.FindAsync(id);
+        var customProperty = await context.CustomProperties.FindAsync(Guid.Parse(id));
         if (customProperty == null) 
             return NotFound();
         return Ok(customProperty);
@@ -36,7 +36,7 @@ public class CustomPropertiesController(AppDbContext context) : ControllerBase
         return Ok(customProperties);
     }
 
-    [HttpGet]
+    [HttpGet("search")]
     public async Task<IActionResult> Search([FromQuery] string keyword)
     {
         if (string.IsNullOrEmpty(keyword))
