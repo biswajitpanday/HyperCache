@@ -28,7 +28,7 @@ public class CustomPropertiesController(AppDbContext context) : ControllerBase
         return Ok(customProperty);
     }
 
-    [HttpGet]
+    [HttpGet("all")]
     public async Task<IActionResult> Get()
     {
         var customProperties = await context.CustomProperties
