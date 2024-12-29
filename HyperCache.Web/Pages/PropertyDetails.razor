@@ -1,0 +1,41 @@
+﻿@page "/property-details/{id}"
+@using HyperCache.Shared.Dtos
+@inject HttpClient Http
+
+<div class="container mt-4">
+    <h3 class="text-primary">Property Details</h3>
+
+    @if (property == null)
+    {
+        <div class="text-center mt-4">
+            <div class="spinner-border text-primary" role="status"></div>
+            <p>Loading...</p>
+        </div>
+    }
+    else
+    {
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5>@property.Name</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Value:</strong> @property.Value</p>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public string? Id { get; set; }
+
+    private CustomPropertyDto? property;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!string.IsNullOrEmpty(Id))
+        {
+            property = await Http.GetFromJsonAsync<CustomPropertyDto>($"CustomProperties/{Id}");
+        }
+    }
+}

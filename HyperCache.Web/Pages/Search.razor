@@ -1,0 +1,50 @@
+﻿@page "/search"
+@using HyperCache.Shared.Dtos
+@inject HttpClient Http
+
+<div class="container mt-4">
+    <h3 class="text-primary">Search Custom Properties</h3>
+
+    <div class="input-group mt-4">
+        <input 
+            class="form-control" 
+            @bind="searchKeyword" 
+            placeholder="Enter keyword" />
+        <button class="btn btn-primary" @onclick="SearchProperties">Search</button>
+    </div>
+
+    @if (properties == null)
+    {
+        <p class="mt-4 text-muted">Enter a keyword to search.</p>
+    }
+    else if (!properties.Any())
+    {
+        <div class="alert alert-warning mt-4" role="alert">
+            No properties found for "<strong>@searchKeyword</strong>".
+        </div>
+    }
+    else
+    {
+        <ul class="list-group mt-4">
+            @foreach (var property in properties)
+            {
+                <li class="list-group-item">
+                    <strong>@property.Name</strong> - @property.Value
+                </li>
+            }
+        </ul>
+    }
+</div>
+
+@code {
+    private string? searchKeyword;
+    private List<CustomPropertyDto>? properties;
+
+    private async Task SearchProperties()
+    {
+        if (!string.IsNullOrWhiteSpace(searchKeyword))
+        {
+            properties = await Http.GetFromJsonAsync<List<CustomPropertyDto>>($"CustomProperties/search?keyword={searchKeyword}");
+        }
+    }
+}
