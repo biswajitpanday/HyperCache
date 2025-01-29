@@ -14,7 +14,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
         var customProperty = modelBuilder.Entity<CustomProperty>();
         customProperty.HasKey(cp => cp.Id);
 
-        // Configures RowVersion for optimistic concurrency control.
+        // Configures RowVersion for Delta Package
         customProperty
             .Property(cp => cp.RowVersion)
             .IsRowVersion()

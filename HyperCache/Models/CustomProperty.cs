@@ -1,4 +1,6 @@
-﻿namespace HyperCache.Api.Models;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace HyperCache.Api.Models;
 
 public class CustomProperty
 {
@@ -11,5 +13,6 @@ public class CustomProperty
     public required string CreatedBy { get; set; }
     public required string ModifiedBy { get; set; }
     public required string ParentTable { get; set; }
+    [Timestamp]
     public byte[] RowVersion { get; set; } = [];
 }
