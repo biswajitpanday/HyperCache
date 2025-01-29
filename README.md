@@ -13,9 +13,6 @@ HyperCache is developed in **Microsoft Visual Studio Enterprise 2022 (64-bit) - 
 - **MSSQL**: Ensures data persistence with SQL Server.
 - **Scalable Architecture**: Designed for ease of use and scalability in enterprise environments.
 
-## Minimum Requirements
-The mentioned versions in the project are the latest available at the time of development. The minimum versions required are based on the dependencies of the Delta NuGet package and Blazor. Please refer to the [Delta NuGet Package](https://www.nuget.org/packages/Delta) for specific minimum version requirements.
-
 ## Benefits of Using the Delta Package
 Using the Delta package improves the efficiency of API responses by sending only the changes instead of the entire dataset. This results in:
 - **Reduced payload size**: Only the modified or new data is transmitted.
@@ -27,9 +24,9 @@ Using the Delta package improves the efficiency of API responses by sending only
 
 | Metric                     | Before Implementation (1M Rows) | After Implementation (1M Rows) |
 |----------------------------|----------------------|----------------------|
-| **Total Requests**         | 10                   | 14                   |
+| **Total Requests**         | 10                   | 14 (Demonstration Purpose) |
 | **Request Method**         | GET                  | GET                  |
-| **Initial Request Time (s)**   | 3.58s - 3.67s       | **5.90s**           |
+| **Initial Request Time (s)**   | 3.58s - 3.67s       | **5.90s** (Due to first-time data retrieval, cache index setup, and rowversion tracking) |
 | **Subsequent Request Times (ms)**    | 3.58s - 3.67s    | **58ms, 12ms, 9ms, 7ms, 6ms, 7ms, 9ms, 6ms, 8ms** |
 | **Total Data Transferred (KB)**  | 9.3 KB               | 7.2 KB               |
 | **Status Code Consistency**| 200 OK               | 200 OK               |
@@ -37,13 +34,14 @@ Using the Delta package improves the efficiency of API responses by sending only
 
 ## Response Time Comparison Before And After Delta Implementation
 
+### Performance Metrics Visualization:
+![Performance Metrics](Screenshots/Metrics.png)
+
 ### Before Implementation:
-![Before Implementation](Before%20Implementation.png)
+![Before Implementation](Screenshots/Before%20Implementation.png)
 
 ### After Implementation:
-![After Implementation - 1](after%20Implementation%20-%201.png)
-![After Implementation - 2](after%20Implementation%20-%202.png)
-![After Implementation - 3](after%20Implementation%20-%203.png)
+![After Implementation - 1](Screenshots/after%20Implementation%20-%201.png)
 
 ## Installation
 Follow these steps to set up the HyperCache project:
@@ -58,7 +56,7 @@ Follow these steps to set up the HyperCache project:
 
 3. Restore the required NuGet packages:
    - Delta
-   - Entity Framework Core 9.0
+   - Entity Framework Core 9.0 etc.
 
    NuGet package restoration can be performed by running:
    ```bash
@@ -82,48 +80,10 @@ Follow these steps to set up the HyperCache project:
    dotnet run
    ```
 
-## Project Structure
-The HyperCache project is organized as follows:
-
-- **Data**: Contains the database context and entity models.
-- **Services**: Implements business logic and caching services.
-- **UI**: Includes Blazor components for the user interface.
-- **Infrastructure**: Handles configurations and utility functions.
-- **Migrations**: Tracks database schema changes.
-
 ## Usage
-1. **Define Entities**: Add your models to the `Data` folder. Example:
-   ```csharp
-   public class CacheEntry {
-       public int Id { get; set; }
-       public string Key { get; set; }
-       public string Value { get; set; }
-   }
-   ```
 
-2. **Update the Database**: Run the following commands after modifying your entities:
-   ```bash
-   dotnet ef migrations add MigrationName
-   dotnet ef database update
-   ```
-
-3. **Integrate Caching Service**: Use the provided caching service in your business logic. Example:
-   ```csharp
-   var cachedValue = _cacheService.Get("key");
-   if (cachedValue == null) {
-       cachedValue = "newValue";
-       _cacheService.Set("key", cachedValue);
-   }
-   ```
 
 4. **Build the Blazor UI**: Use Blazor components for interactive user interfaces.
-
-## Technologies Used
-- **.NET 9.0**: Framework for developing the application.
-- **Entity Framework Core 9.0**: ORM for database access.
-- **Blazor**: Modern framework for building UI.
-- **MSSQL**: Database backend.
-- **Delta NuGet Package**: Provides lightweight caching mechanisms.
 
 ## Summary of Delta Package Implementation
 
