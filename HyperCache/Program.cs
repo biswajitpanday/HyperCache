@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<DataSeeder>();
@@ -16,10 +15,13 @@ builder.Services.AddCors();
 
 var app = builder.Build();
 
-// Use this for global Delta processing
+// Applies the Delta middleware to the specified AppDbContext for all incoming requests.
+// This enables Delta's features such as tracking and managing changes in the specified database context Globally.
 app.UseDelta<AppDbContext>();
 
-// Use this, If needs something like: "Request contains CustomProperty"
+// OR For Custom Logic ---------------------------------------------------
+// Configures the Delta middleware to execute only for requests where the URL path contains "CustomProperties".
+// This ensures that Delta logic is applied selectively, optimizing performance and avoiding unnecessary processing for other requests.
 // app.UseDelta<AppDbContext>(shouldExecute: ctx => ctx.Request.Path.ToString().Contains("CustomProperties"));
 
 using (var scope = app.Services.CreateScope())

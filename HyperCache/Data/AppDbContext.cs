@@ -14,13 +14,13 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
         var customProperty = modelBuilder.Entity<CustomProperty>();
         customProperty.HasKey(cp => cp.Id);
 
-        // Configure DeltaHash as a row version column
+        // Configures RowVersion for optimistic concurrency control.
         customProperty
             .Property(cp => cp.RowVersion)
             .IsRowVersion()
             .HasConversion<byte[]>();
 
-        // Configure other relationships and properties as needed
+        // Configure required properties for the CustomProperty entity.
         customProperty.Property(cp => cp.Name).IsRequired();
         customProperty.Property(cp => cp.Value).IsRequired();
         customProperty.Property(cp => cp.CreatedBy).IsRequired();

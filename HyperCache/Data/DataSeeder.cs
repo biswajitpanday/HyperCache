@@ -5,6 +5,9 @@ namespace HyperCache.Api.Data;
 
 public class DataSeeder(AppDbContext context)
 {
+    /// <summary>
+    /// Seeds the CustomProperties table with sample data if it is empty.
+    /// </summary>
     public async Task SeedCustomPropertiesAsync()
     {
         if (await context.CustomProperties.AnyAsync())
@@ -18,13 +21,22 @@ public class DataSeeder(AppDbContext context)
         }
     }
 
+
+    /// <summary>
+    /// Generates a list of custom properties with random data.
+    /// </summary>
+    /// <param name="count">The number of custom properties to generate.</param>
+    /// <returns>A list of CustomProperty objects.</returns>
     private List<CustomProperty> GenerateCustomProperties(int count)
     {
         var random = new Random();
         var customProperties = new List<CustomProperty>();
+
+        // Sample parent table names and user names.
         var parentTableNames = new[] { "Orders", "Products", "Users", "Invoices" };
         var users = new[] { "Alice", "Bob", "Charlie", "Diana" };
 
+        // Create and add a new custom property with random values.
         for (int i = 0; i < count; i++)
         {
             var parentId = Guid.NewGuid();

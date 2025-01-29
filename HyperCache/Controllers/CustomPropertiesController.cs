@@ -1,5 +1,4 @@
 using HyperCache.Api.Data;
-using HyperCache.Api.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,9 +13,7 @@ public class CustomPropertiesController(AppDbContext context) : ControllerBase
     public async Task<IActionResult> GetPagedProperties([FromQuery] int page = 1, [FromQuery] int pageSize = 20)
     {
         if (page < 1 || pageSize < 1)
-        {
             return BadRequest("Page and PageSize must be greater than 0.");
-        }
 
         var totalCount = await context.CustomProperties.CountAsync();
         var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
@@ -24,19 +21,20 @@ public class CustomPropertiesController(AppDbContext context) : ControllerBase
         var properties = await context.CustomProperties
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
+            .Select(p => new
+            {
+                p.Id,
+                p.Name,
+                p.Value,
+                p.ParentTable,
+                p.CreatedBy,
+                p.ModifiedBy
+            })
             .ToListAsync();
 
         var response = new
         {
-            Items = properties.Select(p => new CustomProperty
-            {
-                Id = p.Id,
-                Name = p.Name,
-                Value = p.Value,
-                ParentTable = p.ParentTable,
-                CreatedBy = p.CreatedBy,
-                ModifiedBy = p.ModifiedBy
-            }).ToList(),
+            Items = properties,
             CurrentPage = page,
             TotalPages = totalPages,
             HasPreviousPage = page > 1,
@@ -49,29 +47,33 @@ public class CustomPropertiesController(AppDbContext context) : ControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> GetPropertyDetails(string id)
     {
-        var customProperty = await context.CustomProperties.FindAsync(Guid.Parse(id));
-        if (customProperty == null) 
+        if (!Guid.TryParse(id, out var propertyId))
+            return BadRequest("Invalid GUID format.");
+
+        var customProperty = await context.CustomProperties.FindAsync(propertyId);
+        if (customProperty == null)
             return NotFound();
+
         return Ok(customProperty);
     }
 
     [HttpGet("all")]
     public async Task<IActionResult> Get()
     {
-        var customProperties = await context.CustomProperties
-            .ToListAsync();
+        var customProperties = await context.CustomProperties.ToListAsync();
         return Ok(customProperties);
     }
 
     [HttpGet("search")]
     public async Task<IActionResult> Search([FromQuery] string keyword)
     {
-        if (string.IsNullOrEmpty(keyword))
+        if (string.IsNullOrWhiteSpace(keyword))
             return BadRequest("Keyword can't be empty!");
 
         var customProperties = await context.CustomProperties
             .Where(x => x.Name.Contains(keyword))
             .ToListAsync();
+
         return Ok(customProperties);
     }
 }
