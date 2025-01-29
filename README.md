@@ -13,13 +13,6 @@ HyperCache is developed in **Microsoft Visual Studio Enterprise 2022 (64-bit) - 
 - **MSSQL**: Ensures data persistence with SQL Server.
 - **Scalable Architecture**: Designed for ease of use and scalability in enterprise environments.
 
-## Benefits of Using the Delta Package
-Using the Delta package improves the efficiency of API responses by sending only the changes instead of the entire dataset. This results in:
-- **Reduced payload size**: Only the modified or new data is transmitted.
-- **Faster API responses**: Optimized data transmission improves application performance.
-- **Better scalability**: Decreased bandwidth usage allows handling more requests efficiently.
-- **Improved user experience**: Faster load times enhance user interaction.
-
 ## Performance Comparison Table (1M Rows)
 
 | Metric                     | Before Implementation (1M Rows) | After Implementation (1M Rows) |
@@ -79,11 +72,74 @@ Follow these steps to set up the HyperCache project:
    ```bash
    dotnet run
    ```
+   
+4. **Build and run the Blazor UI**: Use Blazor components for interactive user interfaces.
 
-## Usage
+## How to Configure Delta Package
 
+To properly configure and use the Delta package in HyperCache, follow these steps:
 
-4. **Build the Blazor UI**: Use Blazor components for interactive user interfaces.
+### Step 1: Modify `OnModelCreating` in the `DbContext`
+
+In your `AppDbContext.cs` file, configure the `RowVersion` column for delta tracking:
+
+```csharp
+protected override void OnModelCreating(ModelBuilder modelBuilder)
+{
+    base.OnModelCreating(modelBuilder);
+
+    var customProperty = modelBuilder.Entity<CustomProperty>();
+    customProperty.HasKey(cp => cp.Id);
+
+    // Configures RowVersion for Delta Package
+    customProperty
+        .Property(cp => cp.RowVersion)
+        .IsRowVersion()
+        .HasConversion<byte[]>();
+}
+```
+
+### Step 2: Register Delta Middleware in `Program.cs`
+
+Ensure the Delta package is registered before mapping controllers:
+
+```csharp
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddControllers();
+
+// Register Delta middleware
+builder.Services.AddDelta<AppDbContext>();
+
+var app = builder.Build();
+
+app.UseHttpsRedirection();
+app.UseAuthorization();
+
+// Enable Delta middleware
+app.UseDelta<AppDbContext>();
+
+app.MapControllers();
+
+app.Run();
+```
+
+### Step 3: Define Entity Model with `RowVersion`
+
+Ensure the `CustomProperty` entity includes a `RowVersion` column:
+
+```csharp
+public class CustomProperty
+{
+    public int Id { get; set; }
+
+    [Timestamp] // Required for EF Core concurrency tracking
+    public byte[] RowVersion { get; set; }
+}
+```
 
 ## Summary of Delta Package Implementation
 
