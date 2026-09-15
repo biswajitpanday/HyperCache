@@ -1,6 +1,25 @@
-@HyperCache_HostAddress = http://localhost:5012
+@HyperCache_HostAddress = https://localhost:7148
 
-GET {{HyperCache_HostAddress}}/weatherforecast/
+### Paged list. Note the ETag header on the response.
+GET {{HyperCache_HostAddress}}/api/customproperties/paged?page=1&pageSize=20
 Accept: application/json
 
-###
+### Same request with the ETag from above: Delta answers 304 Not Modified without hitting the table.
+GET {{HyperCache_HostAddress}}/api/customproperties/paged?page=1&pageSize=20
+Accept: application/json
+If-None-Match: "<paste-etag-here>"
+
+### Search by name
+GET {{HyperCache_HostAddress}}/api/customproperties/search?keyword=Orders_Property_1
+Accept: application/json
+
+### Single item (use an Id from the paged response)
+GET {{HyperCache_HostAddress}}/api/customproperties/00000000-0000-0000-0000-000000000000
+Accept: application/json
+
+### Everything (large payload; the request the README benchmarks)
+GET {{HyperCache_HostAddress}}/api/customproperties/all
+Accept: application/json
+
+### OpenAPI document (Development only). Browsable UI at {{HyperCache_HostAddress}}/scalar
+GET {{HyperCache_HostAddress}}/openapi/v1.json

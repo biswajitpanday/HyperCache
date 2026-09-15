@@ -1,4 +1,4 @@
-﻿using HyperCache.Api.Models;
+using HyperCache.Api.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace HyperCache.Api.Data;
@@ -14,11 +14,10 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
         var customProperty = modelBuilder.Entity<CustomProperty>();
         customProperty.HasKey(cp => cp.Id);
 
-        // Configures RowVersion for Delta Package
+        // SQL Server rowversion column. Every write bumps @@DBTS, which is what Delta reads to build its ETag.
         customProperty
             .Property(cp => cp.RowVersion)
-            .IsRowVersion()
-            .HasConversion<byte[]>();
+            .IsRowVersion();
 
         // Configure required properties for the CustomProperty entity.
         customProperty.Property(cp => cp.Name).IsRequired();
