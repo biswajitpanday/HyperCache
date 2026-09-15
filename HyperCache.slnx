@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="HyperCache.Api.Tests/HyperCache.Api.Tests.csproj" />
+  <Project Path="HyperCache.Web/HyperCache.Web.csproj" />
+  <Project Path="HyperCache/HyperCache.Api.csproj" />
+</Solution>

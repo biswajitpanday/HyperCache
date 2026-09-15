@@ -1,6 +1,6 @@
-﻿namespace HyperCache.Web.Constants;
+namespace HyperCache.Web.Constants;
 
-public class ApiConstant
+public static class ApiConstant
 {
     public const string BaseUrl = "https://localhost:7148";
     public const string CustomProperties = "api/customproperties";

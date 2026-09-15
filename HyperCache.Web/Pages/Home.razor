@@ -1,7 +1,21 @@
-﻿@page "/"
+@page "/"
 
-<PageTitle>Home</PageTitle>
+<PageTitle>HyperCache</PageTitle>
 
-<h1>Hello, world!</h1>
+<h1 class="text-primary">HyperCache</h1>
 
-Welcome to your new app.
+<p class="lead">
+    A demo of HTTP caching with the <a href="https://github.com/SimonCropp/Delta" target="_blank">Delta</a> middleware
+    on .NET 10, Entity Framework Core 10 and SQL Server.
+</p>
+
+<p>
+    The API behind this page holds one million rows. Every <code>GET</code> carries an <code>ETag</code> derived from
+    the database's change stamp, so repeating a request costs a <code>304 Not Modified</code> instead of a query.
+    Open the browser's network tab, page back and forth, and watch the repeat requests come back in milliseconds.
+</p>
+
+<div class="d-flex gap-2 mt-4">
+    <a class="btn btn-primary" href="custom-properties">Browse properties</a>
+    <a class="btn btn-outline-primary" href="search">Search</a>
+</div>
