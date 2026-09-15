@@ -202,7 +202,7 @@ The tests boot the real API in-process (`WebApplicationFactory`) and need a reac
 dotnet test HyperCache.slnx
 ```
 
-The same suite runs in GitHub Actions on every push and pull request (`.github/workflows/ci.yml`), against a SQL Server 2022 service container.
+The same suite runs in GitHub Actions on every push and pull request (`.github/workflows/ci.yml`), against a SQL Server 2022 container started in the job with a password generated per run.
 
 The connection is taken from `HYPERCACHE_TEST_CONNECTION` if set, otherwise from the API's `ConnectionStrings:DefaultConnection` with the database name swapped to `HyperCacheDB_Test`.
 
